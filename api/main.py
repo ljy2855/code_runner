@@ -24,6 +24,9 @@ app.add_middleware(
 
 class CodeFile(BaseModel):
     code: str
+    lang : str
+    input_buff : str
+    
     
 
 @app.get("/")
@@ -34,20 +37,24 @@ def read_root():
 async def get_code(code : CodeFile):
     codefile = dict(code)
     codefile['success'] = True
-    
+    #print(codefile)
     
     return await compile_code(codefile)
 
 
 async def compile_code(codefile):
     file_path = DIRPATH + "/template_code/test.c" 
+    input_path = DIRPATH + "/template_code/input.txt"
     f = open(file_path,"w")
     f.write(codefile['code'])
+    f.close()
+    f = open(input_path,"w")
+    f.write(codefile['input_buff'])
     f.close()
     
     try:
         output =subprocess.check_output("gcc -o {0}/test {1}".format(DIRPATH+"/template_code",file_path),shell =True,stderr=subprocess.STDOUT,universal_newlines=True)
-        result = subprocess.check_output(DIRPATH +"/template_code/test", shell=True,timeout = 1,universal_newlines=True)
+        result = subprocess.check_output("cat " + input_path + " |" + DIRPATH +"/template_code/test", shell=True,timeout = 1,universal_newlines=True)
     except subprocess.CalledProcessError as e: #컴파일 실패
         result = ''
         for line in e.output.split('\n'):
