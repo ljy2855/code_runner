@@ -7,6 +7,8 @@ import subprocess
 from fastapi.middleware.cors import CORSMiddleware
 
 DIRPATH = os.getcwd()
+file_path = DIRPATH + "/template_code/test.c" 
+input_path = DIRPATH + "/template_code/input.txt"
 
 app = FastAPI()
 origins = [
@@ -38,13 +40,14 @@ async def get_code(code : CodeFile):
     codefile = dict(code)
     codefile['success'] = True
     #print(codefile)
+    complier = ComplieCode(codefile)
     
-    return await compile_code(codefile)
+    
+    return await complier.compile()
 
 
 async def compile_code(codefile):
-    file_path = DIRPATH + "/template_code/test.c" 
-    input_path = DIRPATH + "/template_code/input.txt"
+    
     f = open(file_path,"w")
     f.write(codefile['code'])
     f.close()
@@ -71,4 +74,52 @@ async def compile_code(codefile):
         
     #print(result)
     return result
+
+class ComplieCode():
+    def __init__(self,code):
+        self.codeFile = code
+        self.writeFile()
+
+
+    def writeFile(self):
+        f = open(file_path,"w")
+        f.write(self.codeFile['code'])
+        f.close()
+
+        f = open(input_path,"w")
+        f.write(self.codeFile['input_buff'])
+        f.close()
+
+    async def compile(self):
+        try:
+            if self.codeFile['lang'] == "c":
+                result = self.cCompile()
+            elif self.codeFile['lang'] == "python":
+                result = self.pyCompile()
+
+        except subprocess.CalledProcessError as e: #컴파일 실패
+            result = ''
+            for line in e.output.split('\n'):
+                for word in line.split(' '):
+                    if DIRPATH not in word:
+                        result += word + ' '
+                result += '\n'
+        except subprocess.TimeoutExpired as e:
+            if len(e.output) > 10000:
+                result = 'Warning: over 10000 char\n'
+                result += e.output.decode('utf-8')[:10000]
+            else:
+                result = e.output
+            
+        #print(result)
+        return result
     
+    def cCompile(self):
+        output =subprocess.check_output("gcc -o {0}/test {1}".format(DIRPATH+"/template_code",file_path),shell =True,stderr=subprocess.STDOUT,universal_newlines=True)
+        return subprocess.check_output("cat " + input_path + " |" + DIRPATH +"/template_code/test", shell=True,timeout = 1,universal_newlines=True)
+    
+    def pyCompile(self):
+        return subprocess.check_output("cat " + input_path + " |" + "python3 " +file_path, shell=True,timeout = 1,universal_newlines=True,stderr=subprocess.STDOUT)
+
+    def javaCompile(self):
+        output =subprocess.check_output("gcc -o {0}/test {1}".format(DIRPATH+"/template_code",file_path),shell =True,stderr=subprocess.STDOUT,universal_newlines=True)
