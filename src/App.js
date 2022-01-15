@@ -31,8 +31,8 @@ function App() {
 
 const code_lang = [
     { value: 'c', label: 'C' },
-    //{value : 'c_cpp', label: 'CPP'},
-    //{value : 'java', label: 'Java'},
+    {value : 'c_cpp', label: 'CPP'},
+    {value : 'java', label: 'Java'},
     { value: 'python', label: 'Python' },
 ];
 
@@ -175,6 +175,7 @@ class Editor extends React.Component {
                                 value={this.state.content.code}
                                 onChange={this.handleCodeChange}
                                 height="800px"
+                                width="90%"
                                 editorProps={{ $blockScrolling: true }}
                                 setOptions={{
                                     enableBasicAutocompletion: true,

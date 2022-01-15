@@ -82,9 +82,15 @@ class ComplieCode():
 
 
     def writeFile(self):
-        f = open(file_path,"w")
-        f.write(self.codeFile['code'])
-        f.close()
+        if self.codeFile['lang'] == "java":
+            f = open(DIRPATH+"/template_code/Main.java","w")
+            f.write(self.codeFile['code'])
+            f.close()
+        
+        else :
+            f = open(file_path,"w")
+            f.write(self.codeFile['code'])
+            f.close()
 
         f = open(input_path,"w")
         f.write(self.codeFile['input_buff'])
@@ -96,6 +102,10 @@ class ComplieCode():
                 result = self.cCompile()
             elif self.codeFile['lang'] == "python":
                 result = self.pyCompile()
+            elif self.codeFile['lang'] == "c_cpp":
+                result = self.cppCompile()
+            elif self.codeFile['lang'] == "java":
+                result = self.javaCompile()
 
         except subprocess.CalledProcessError as e: #컴파일 실패
             result = ''
@@ -118,8 +128,16 @@ class ComplieCode():
         output =subprocess.check_output("gcc -o {0}/test {1}".format(DIRPATH+"/template_code",file_path),shell =True,stderr=subprocess.STDOUT,universal_newlines=True)
         return subprocess.check_output("cat " + input_path + " |" + DIRPATH +"/template_code/test", shell=True,timeout = 1,universal_newlines=True)
     
+    def cppCompile(self):
+        output =subprocess.check_output("g++ -o {0}/test {1}".format(DIRPATH+"/template_code",file_path),shell =True,stderr=subprocess.STDOUT,universal_newlines=True)
+        return subprocess.check_output("cat " + input_path + " |" + DIRPATH +"/template_code/test", shell=True,timeout = 1,universal_newlines=True)
+
     def pyCompile(self):
         return subprocess.check_output("cat " + input_path + " |" + "python3 " +file_path, shell=True,timeout = 1,universal_newlines=True,stderr=subprocess.STDOUT)
 
     def javaCompile(self):
-        output =subprocess.check_output("gcc -o {0}/test {1}".format(DIRPATH+"/template_code",file_path),shell =True,stderr=subprocess.STDOUT,universal_newlines=True)
+        output =subprocess.check_output("javac " + DIRPATH +"/template_code/Main.java",shell =True,stderr=subprocess.STDOUT,universal_newlines=True)
+        return subprocess.check_output("cat " + input_path + " |java -cp " +  DIRPATH +"/template_code " +"Main", shell=True,timeout = 1,universal_newlines=True)
+    
+
+   
