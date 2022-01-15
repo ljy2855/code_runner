@@ -9,8 +9,11 @@
 }
 
 div.main-container{
-    padding-top : 5%;
+    padding : 2%;
+    margin-top : 3%;
 }
+
+
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {

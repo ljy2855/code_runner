@@ -42,6 +42,11 @@ const editor_theme = [
     { value: 'xcode', label: 'Xcode' },
     { value: 'tomorrow', label: 'Tomorrow' },
 ]
+        
+const mainContent = {
+    alignItems: 'center',
+    justifyContent: 'center',
+}
 
 class Editor extends React.Component {
 
@@ -132,13 +137,16 @@ class Editor extends React.Component {
     }
     render() {
         return (
-            <Container className='main-container ' fluid="xl">
-                <Row className="bg-light " xs={{
+            <Container className='main-container shadow border rounded'  fluid="xl">
+                <Row  xs={{
                     offset: 3,
                     size: 'auto',
                 }}>
 
-                    <Col md="2">
+                    <Col className="bg-light border rounded" md={{
+                        
+                        size: 2,
+                    }}>
                         <h4>
                             Options
                         </h4>
@@ -163,12 +171,13 @@ class Editor extends React.Component {
                             />
                         </Row>
                     </Col>
-                    <Col md="6">
-                        <Row>
-                            <h4>
-                                Code
+                    <Col md="6" >
+                        <Row style={mainContent}>
+                            <h4 >
+                               Code
                             </h4>
                             <AceEditor
+                                className="main-code border rounded"
                                 mode={this.state.content.lang === 'c' ? "c_cpp" : this.state.content.lang}
                                 theme={this.state.editor_setting.theme}
                                 name="UNIQUE_ID_OF_DIV"
@@ -196,14 +205,17 @@ class Editor extends React.Component {
                                 Input
                             </h4>
                             <AceEditor
+                                className="input-code border rounded"
                                 value={this.state.content.input_buff}
                                 onChange={this.handleInputBuffChange}
                                 height="300px"
+                                width="90%"
 
                             />
                         </Row>
                         <br />
                         <Button
+                            className="Submit button"
                             onClick={this.handleCompile}
                         //size="lg"
                         >
@@ -215,11 +227,13 @@ class Editor extends React.Component {
                                 Output
                             </h4>
                             <AceEditor
+                                className="output-code border rounded"
                                 theme="terminal"
                                 value={this.state.output}
                                 editorProps={{ $blockScrolling: false }}
                                 readOnly={true}
-                                height="300px"
+                                height="400px"
+                                width="90%"
                             />
                         </Row>
                     </Col>
