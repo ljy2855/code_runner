@@ -31,7 +31,7 @@ function App() {
 
 const code_lang = [
     { value: 'c', label: 'C' },
-    {value : 'c_cpp', label: 'CPP'},
+    {value : 'c_cpp', label: 'C++'},
     {value : 'java', label: 'Java'},
     { value: 'python', label: 'Python' },
 ];
@@ -62,6 +62,11 @@ class Editor extends React.Component {
             },
             editor_setting: {
                 theme: editor_theme[0].value,
+                enableBasicAutocompletion: true,
+                enableLiveAutocompletion: true,
+                enableSnippets: true,
+                fontSize: 14,
+                
             },
             output: '',
 
@@ -114,7 +119,7 @@ class Editor extends React.Component {
         const data = this.state.content;
 
         axios.post(
-            'https://test.cspc.me/api/code',
+            'https://code.cspc.me/api/code',
             {
                 code: data.code,
                 lang: data.lang,
@@ -138,10 +143,7 @@ class Editor extends React.Component {
     render() {
         return (
             <Container className='main-container shadow border rounded'  fluid="xl">
-                <Row  xs={{
-                    offset: 3,
-                    size: 'auto',
-                }}>
+                <Row>
 
                     <Col className="bg-light border rounded" md={{
                         
