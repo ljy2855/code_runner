@@ -45,36 +45,6 @@ async def get_code(code : CodeFile):
     
     return await complier.compile()
 
-
-async def compile_code(codefile):
-    
-    f = open(file_path,"w")
-    f.write(codefile['code'])
-    f.close()
-    f = open(input_path,"w")
-    f.write(codefile['input_buff'])
-    f.close()
-    
-    try:
-        output =subprocess.check_output("gcc -o {0}/test {1}".format(DIRPATH+"/template_code",file_path),shell =True,stderr=subprocess.STDOUT,universal_newlines=True)
-        result = subprocess.check_output("cat " + input_path + " |" + DIRPATH +"/template_code/test", shell=True,timeout = 1,universal_newlines=True)
-    except subprocess.CalledProcessError as e: #컴파일 실패
-        result = ''
-        for line in e.output.split('\n'):
-            for word in line.split(' '):
-                if DIRPATH not in word:
-                    result += word + ' '
-            result += '\n'
-    except subprocess.TimeoutExpired as e:
-        if len(e.output) > 10000:
-            result = 'Warning: over 10000 char\n'
-            result += e.output.decode('utf-8')[:10000]
-        else:
-            result = e.output
-        
-    #print(result)
-    return result
-
 class ComplieCode():
     def __init__(self,code):
         self.codeFile = code
@@ -120,7 +90,9 @@ class ComplieCode():
                 result += e.output.decode('utf-8')[:10000]
             else:
                 result = e.output
-            
+        finally:
+            os.system("ps -ef | grep java | awk '{print $2}' | xargs kill -9")
+            print("finish")
         #print(result)
         return result
     
