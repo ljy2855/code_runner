@@ -41,5 +41,21 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "description": "> This project is web code compiler for ps",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ljy2855/code_runner.git"
+  },
+  "author": "ljy2855",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ljy2855/code_runner/issues"
+  },
+  "homepage": "https://code.cspc.me",
+  "devDependencies": {
+    "favicons-webpack-plugin": "^5.0.2",
+    "webpack-pwa-manifest": "^4.3.0"
   }
 }

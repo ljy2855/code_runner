@@ -81,7 +81,7 @@ class Editor extends React.Component {
     handleSelectLang = (event) => {
         const content = this.state.content;
         content.lang = event.value;
-        console.log(content);
+        //console.log(content);
         this.setState({
             content: content,
         });
@@ -97,7 +97,7 @@ class Editor extends React.Component {
     handleEditorThemeChange = (e) => {
         const setting = this.state.editor_setting;
         setting.theme = e.value;
-        console.log(setting)
+        //console.log(setting)
         this.setState({
             editor_setting : setting,
         })
@@ -133,10 +133,10 @@ class Editor extends React.Component {
 
 
         ).then((res) => {
-            console.log(res)
+            //console.log(res)
             this.setState({ output: res.data });
         }).catch((error) => {
-            console.log(error);
+            //console.log(error);
         });
 
     }
